@@ -1,0 +1,79 @@
+/* ==========================================================================
+   Dyson Game Hub — Responsive rules
+   Mobile-first base lives in style.css / games.css; this file layers the
+   breakpoint refinements. Checked at 320, 375, 414, 768, 1024 and 1440.
+   ========================================================================== */
+
+/* Small phones (<=374px) */
+@media (max-width: 374px) {
+  .container { padding: 0 14px; }
+  .hero { padding: 36px 0 26px; }
+  .btn { padding: 13px 20px; font-size: 0.94rem; }
+  .stats { gap: 8px; }
+  .stat-card { padding: 14px 6px; }
+  .gh-brand { font-size: .82rem; }
+  .answer-grid { gap: 8px; }
+  .answer-tile__label { font-size: .85rem; }
+  .bento__pics { gap: 5px; }
+}
+
+/* Phones: keep the collage inside the screen */
+@media (max-width: 859px) {
+  .collage { margin: 0 auto; }
+  .bubble--in { left: 0; }
+  .bubble--q { right: 0; }
+  .bubble--score { right: 0; }
+}
+
+/* Tablets and up */
+@media (min-width: 620px) {
+  .game-grid { grid-template-columns: repeat(2, 1fr); }
+  .bento { grid-template-columns: repeat(2, 1fr); }
+  .steps { grid-template-columns: repeat(3, 1fr); }
+  .hero__actions .btn { min-width: 190px; }
+  .chip-pic { width: 170px; height: 215px; }
+  .question-card { padding: 30px 28px; }
+}
+
+@media (min-width: 640px) {
+  .wyr-options { grid-template-columns: 1fr auto 1fr; align-items: center; }
+  .wyr-vs { margin: 0 -22px; }
+  .game-banner { min-height: 210px; }
+}
+
+/* Laptops / large tablets */
+@media (min-width: 860px) {
+  .section { padding: 76px 0; }
+  .hero { padding: 76px 0 56px; }
+  .hero__grid { grid-template-columns: 1.05fr 0.95fr; }
+}
+
+/* Desktop */
+@media (min-width: 1000px) {
+  .game-grid { grid-template-columns: repeat(4, 1fr); }
+  .bento { grid-template-columns: repeat(3, 1fr); }
+  .quiz-shell, .wyr-shell, .tod-shell { padding-top: 40px; }
+}
+
+/* Large desktop */
+@media (min-width: 1440px) {
+  .container { max-width: 1240px; }
+}
+
+/* Never scroll sideways */
+html, body { max-width: 100%; overflow-x: hidden; }
+
+/* Touch niceties */
+button, a.btn, .answer-btn, .wyr-option, .tod-choice, .chip { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+/* Landscape phones: drop the collage to save vertical space */
+@media (max-height: 480px) and (orientation: landscape) {
+  .hero__visual { display: none; }
+}
+
+/* Marquee should stand still for people who ask for less motion */
+@media (prefers-reduced-motion: reduce) {
+  .marquee { overflow-x: auto; }
+  .marquee__track { animation: none; }
+  .collage__col { animation: none !important; }
+}

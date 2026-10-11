@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard — Dyson Game Hub</title>
+<meta name="description" content="Every game you have created, with live stats.">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#07080F">
+<meta property="og:title" content="My Dashboard — Dyson Game Hub">
+<meta property="og:description" content="Every game you have created, with live stats.">
+<meta property="og:image" content="icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="games.css">
+<link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="gh-nav">
+  <div class="container gh-nav__inner">
+    <a href="index.html" class="gh-brand">
+      <img src="logo.png" alt="" width="38" height="38">
+      Dyson Game Hub
+    </a>
+    <nav class="gh-nav__links" aria-label="Primary">
+      <a href="index.html#games">Games</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="profile.html" aria-current="page">Dashboard</a>
+    </nav>
+    <a href="create-game.html" class="btn btn-primary btn-sm gh-nav__cta">+ Create a Game</a>
+    <button class="btn-icon" data-sound-toggle aria-label="Mute sound effects" aria-pressed="false" type="button">🔊</button>
+    <button class="gh-nav__menu-btn" aria-label="Open menu" aria-expanded="false" type="button">☰</button>
+  </div>
+  <div class="gh-mobile-menu">
+    <a href="index.html#games">Games</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="profile.html">Dashboard</a>
+    <a href="create-game.html">+ Create a Game</a>
+  </div>
+</header>
+<main id="main">
+  <section class="section" style="padding-top:32px;">
+    <div class="container" style="max-width:760px;">
+      <div class="section-head">
+        <h1 style="font-size:1.8rem;">My Dashboard</h1>
+        <p>Every game you've created on this device, with live stats.</p>
+      </div>
+
+      <div class="dash-stats" id="dash-stats">
+        <div class="stat-card"><div class="stat-card__num">—</div><div class="stat-card__label">My Games</div></div>
+        <div class="stat-card"><div class="stat-card__num">—</div><div class="stat-card__label">Total Players</div></div>
+        <div class="stat-card"><div class="stat-card__num">—</div><div class="stat-card__label">Average Score</div></div>
+      </div>
+
+      <div class="flex items-center" style="justify-content:space-between;margin-bottom:14px;">
+        <h2 class="mb-0" style="font-size:1.2rem;">My Games</h2>
+        <input type="text" id="dash-search" placeholder="Search my games…" style="max-width:200px;">
+      </div>
+
+      <div id="dash-games-list"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="gh-footer">
+  <div class="container">
+    <div class="gh-footer__bottom text-center" style="border-top:none;padding-top:0;">© <span data-year></span> Dyson Game Hub. Not affiliated with WhatsApp Inc. or Meta.</div>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="config.js"></script>
+<script src="supabase.js"></script>
+<script src="images.js"></script>
+<script src="app.js"></script>
+<script src="auth.js"></script>
+<script src="sharing.js"></script>
+<script src="sound.js"></script>
+<script>
+  (async function () {
+    const listEl = document.getElementById("dash-games-list");
+    const statsEl = document.getElementById("dash-stats");
+    let allGames = [];
+
+    listEl.innerHTML = `<div class="state-box"><div class="spinner"></div><p>Loading your games…</p></div>`;
+
+    const { data: games, error } = await GameHubDB.getMyGames();
+    if (error) {
+      listEl.innerHTML = `<div class="state-box"><div class="state-box__icon">⚠️</div><h3>Couldn't load your games</h3><p>${GameHubApp.escapeHtml(error.message)}</p></div>`;
+      return;
+    }
+    allGames = games || [];
+
+    if (allGames.length === 0) {
+      statsEl.innerHTML = statCard(0, "My Games") + statCard(0, "Total Players") + statCard("—", "Average Score");
+      listEl.innerHTML = `
+        <div class="state-box">
+          <div class="state-box__icon">🎮</div>
+          <h3>No games created yet.</h3>
+          <p>Create your first "Who Knows Me Better?" quiz and share it on WhatsApp.</p>
+          <a href="create-game.html" class="btn btn-primary" style="margin-top:14px;">+ Create a Game</a>
+        </div>`;
+      return;
+    }
+
+    // Pull result counts + average score per game to populate summary stats and each card.
+    const withStats = await Promise.all(
+      allGames.map(async (g) => {
+        const { data: results } = await GameHubDB.getLeaderboard(g.id, 500);
+        const count = results?.length || 0;
+        const avg = count > 0 ? Math.round(results.reduce((s, r) => s + r.percentage, 0) / count) : null;
+        return { ...g, playerCount: count, avgScore: avg };
+      })
+    );
+
+    const totalPlayers = withStats.reduce((s, g) => s + g.playerCount, 0);
+    const gamesWithScores = withStats.filter((g) => g.avgScore !== null);
+    const overallAvg = gamesWithScores.length
+      ? Math.round(gamesWithScores.reduce((s, g) => s + g.avgScore, 0) / gamesWithScores.length)
+      : null;
+
+    statsEl.innerHTML =
+      statCard(withStats.length, "My Games") +
+      statCard(totalPlayers, "Total Players") +
+      statCard(overallAvg !== null ? overallAvg + "%" : "—", "Average Score");
+
+    function statCard(num, label) {
+      return `<div class="stat-card"><div class="stat-card__num">${num}</div><div class="stat-card__label">${label}</div></div>`;
+    }
+
+    function renderGames(games) {
+      if (games.length === 0) {
+        listEl.innerHTML = `<div class="state-box"><div class="state-box__icon">🔍</div><h3>No games match your search.</h3></div>`;
+        return;
+      }
+      listEl.innerHTML = games
+        .map((g) => {
+          const link = GameHubShare.buildShareLink(g.game_type, g.share_code);
+          return `
+          <div class="my-game-row">
+            <div class="my-game-row__top">
+              <div>
+                <strong>${GameHubApp.escapeHtml(g.title)}</strong>
+                <div class="my-game-row__code">${g.share_code}</div>
+              </div>
+              <span class="badge">${g.playerCount} played${g.avgScore !== null ? " · " + g.avgScore + "% avg" : ""}</span>
+            </div>
+            <div class="my-game-row__actions">
+              <a href="play.html?type=${g.game_type}&game=${g.share_code}" class="btn btn-primary btn-sm">▶ Play</a>
+              <a href="results.html?game=${g.id}" class="btn btn-secondary btn-sm">📊 Results</a>
+              <button class="btn btn-secondary btn-sm" data-share="${link}" data-name="${GameHubApp.escapeHtml(g.creator_name || "")}" data-type="${g.game_type}">💬 Share</button>
+              <button class="btn btn-danger btn-sm" data-delete="${g.id}">🗑 Delete</button>
+            </div>
+          </div>`;
+        })
+        .join("");
+
+      listEl.querySelectorAll("[data-share]").forEach((btn) =>
+        btn.addEventListener("click", () => GameHubShare.shareOnWhatsapp(btn.dataset.type, btn.dataset.share, btn.dataset.name))
+      );
+
+      listEl.querySelectorAll("[data-delete]").forEach((btn) =>
+        btn.addEventListener("click", async () => {
+          if (!confirm("Delete this game permanently? This cannot be undone.")) return;
+          btn.disabled = true;
+          btn.textContent = "Deleting…";
+          const { error: delError } = await GameHubDB.deleteGame(btn.dataset.delete);
+          if (delError) {
+            GameHubApp.toast("Couldn't delete game: " + delError.message, "error");
+            btn.disabled = false;
+            btn.textContent = "🗑 Delete";
+            return;
+          }
+          GameHubApp.toast("Game deleted.", "success");
+          allGamesGlobalRefresh(btn.dataset.delete);
+        })
+      );
+    }
+
+    function allGamesGlobalRefresh(deletedId) {
+      const idx = withStats.findIndex((g) => g.id === deletedId);
+      if (idx > -1) withStats.splice(idx, 1);
+      renderGames(withStats);
+    }
+
+    renderGames(withStats);
+
+    document.getElementById("dash-search").addEventListener("input", (e) => {
+      const term = e.target.value.trim().toLowerCase();
+      const filtered = term
+        ? withStats.filter((g) => g.title.toLowerCase().includes(term) || g.share_code.toLowerCase().includes(term))
+        : withStats;
+      renderGames(filtered);
+    });
+  })();
+</script>
+</body>
+</html>

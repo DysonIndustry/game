@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Results — Dyson Game Hub</title>
+<meta name="description" content="Everyone who has played your game, ranked.">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#07080F">
+<meta property="og:title" content="Game Results — Dyson Game Hub">
+<meta property="og:description" content="Everyone who has played your game, ranked.">
+<meta property="og:image" content="icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="games.css">
+<link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="gh-nav">
+  <div class="container gh-nav__inner">
+    <a href="index.html" class="gh-brand">
+      <img src="logo.png" alt="" width="38" height="38">
+      Dyson Game Hub
+    </a>
+    <nav class="gh-nav__links" aria-label="Primary">
+      <a href="index.html#games">Games</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="profile.html" aria-current="page">Dashboard</a>
+    </nav>
+    <a href="create-game.html" class="btn btn-primary btn-sm gh-nav__cta">+ Create a Game</a>
+    <button class="btn-icon" data-sound-toggle aria-label="Mute sound effects" aria-pressed="false" type="button">🔊</button>
+    <button class="gh-nav__menu-btn" aria-label="Open menu" aria-expanded="false" type="button">☰</button>
+  </div>
+  <div class="gh-mobile-menu">
+    <a href="index.html#games">Games</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="profile.html">Dashboard</a>
+    <a href="create-game.html">+ Create a Game</a>
+  </div>
+</header>
+<main id="main">
+  <section class="section" style="padding-top:32px;">
+    <div class="container" style="max-width:720px;">
+      <div id="results-header" class="section-head">
+        <div class="state-box"><div class="spinner"></div><p>Loading game…</p></div>
+      </div>
+
+      <div id="results-search" class="hidden field" style="max-width:320px;">
+        <label for="results-filter">Search player</label>
+        <input type="text" id="results-filter" placeholder="Type a name…">
+      </div>
+
+      <div id="results-list"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="gh-footer">
+  <div class="container">
+    <div class="gh-footer__bottom text-center" style="border-top:none;padding-top:0;">© <span data-year></span> Dyson Game Hub. Not affiliated with WhatsApp Inc. or Meta.</div>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="config.js"></script>
+<script src="supabase.js"></script>
+<script src="images.js"></script>
+<script src="app.js"></script>
+<script src="auth.js"></script>
+<script src="sharing.js"></script>
+<script src="sound.js"></script>
+<script src="leaderboard.js"></script>
+<script>
+  (async function () {
+    const gameId = GameHubApp.qs("game");
+    const headerEl = document.getElementById("results-header");
+    const listEl = document.getElementById("results-list");
+    const searchWrap = document.getElementById("results-search");
+
+    if (!gameId) {
+      headerEl.innerHTML = `<h1>Game Results</h1><p>No game specified. Open this page from your <a href="profile.html">dashboard</a>.</p>`;
+      return;
+    }
+
+    const { data: game, error } = await GameHubDB.getGameById(gameId);
+    if (error || !game) {
+      headerEl.innerHTML = `<h1>Game Results</h1>`;
+      listEl.innerHTML = `<div class="state-box"><div class="state-box__icon">⚠️</div><h3>Couldn't load this game</h3><p>${GameHubApp.escapeHtml(error?.message || "It may have been deleted.")}</p></div>`;
+      return;
+    }
+
+    headerEl.innerHTML = `
+      <span class="badge">Code: ${game.share_code}</span>
+      <h1 style="font-size:1.7rem;margin-top:8px;">${GameHubApp.escapeHtml(game.title)}</h1>
+      <p>Everyone who has played this game, ranked by score.</p>
+    `;
+
+    const { data: results, error: resError } = await GameHubDB.getLeaderboard(game.id, 200);
+    if (resError) {
+      listEl.innerHTML = `<div class="state-box"><div class="state-box__icon">⚠️</div><h3>Couldn't load results</h3><p>${GameHubApp.escapeHtml(resError.message)}</p></div>`;
+      return;
+    }
+
+    if (!results || results.length === 0) {
+      listEl.innerHTML = `<div class="state-box"><div class="state-box__icon">🙈</div><h3>No players have completed this game yet.</h3><p>Share your game link to start collecting scores.</p></div>`;
+      return;
+    }
+
+    searchWrap.classList.remove("hidden");
+    listEl.innerHTML = `<div id="results-lb"></div>`;
+    const lbEl = document.getElementById("results-lb");
+    GameHubLeaderboard.renderInto(lbEl, results);
+
+    document.getElementById("results-filter").addEventListener("input", (e) => {
+      const term = e.target.value.trim().toLowerCase();
+      const filtered = term
+        ? results.filter((r) => (r.player_name || "").toLowerCase().includes(term))
+        : results;
+      GameHubLeaderboard.renderInto(lbEl, filtered, { emptyMessage: "No players match that search." });
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Play — Dyson Game Hub</title>
+<meta name="description" content="Play a Dyson Game Hub challenge shared with you on WhatsApp.">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#07080F">
+<meta property="og:title" content="Play — Dyson Game Hub">
+<meta property="og:description" content="Play a Dyson Game Hub challenge shared with you on WhatsApp.">
+<meta property="og:image" content="icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="games.css">
+<link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="gh-nav">
+  <div class="container gh-nav__inner">
+    <a href="index.html" class="gh-brand">
+      <img src="logo.png" alt="" width="38" height="38">
+      Dyson Game Hub
+    </a>
+    <nav class="gh-nav__links" aria-label="Primary">
+      <a href="index.html#games" aria-current="page">Games</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="profile.html">Dashboard</a>
+    </nav>
+    <a href="create-game.html" class="btn btn-primary btn-sm gh-nav__cta">+ Create a Game</a>
+    <button class="btn-icon" data-sound-toggle aria-label="Mute sound effects" aria-pressed="false" type="button">🔊</button>
+    <button class="gh-nav__menu-btn" aria-label="Open menu" aria-expanded="false" type="button">☰</button>
+  </div>
+  <div class="gh-mobile-menu">
+    <a href="index.html#games">Games</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="profile.html">Dashboard</a>
+    <a href="create-game.html">+ Create a Game</a>
+  </div>
+</header>
+
+<main id="main">
+  <div class="container">
+    <div class="quiz-shell" id="game-mount">
+      <div class="state-box"><div class="spinner"></div><p>Loading game…</p></div>
+    </div>
+  </div>
+</main>
+
+<footer class="gh-footer">
+  <div class="container">
+    <div class="gh-footer__bottom text-center" style="border-top:none;padding-top:0;">© <span data-year></span> Dyson Game Hub. Not affiliated with WhatsApp Inc. or Meta.</div>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="config.js"></script>
+<script src="supabase.js"></script>
+<script src="images.js"></script>
+<script src="app.js"></script>
+<script src="auth.js"></script>
+<script src="sharing.js"></script>
+<script src="sound.js"></script>
+<script src="leaderboard.js"></script>
+<script src="who-knows-me.js"></script>
+<script src="would-you-rather.js"></script>
+<script src="truth-or-dare.js"></script>
+<script src="general-knowledge.js"></script>
+
+<script>
+  /**
+   * Orchestrator: reads ?type= and ?game= from the URL and mounts the
+   * correct game experience into #game-mount. Handles the "enter a
+   * game code" join flow, and friendly errors for bad/expired codes.
+   */
+  (function () {
+    const mount = document.getElementById("game-mount");
+    const type = GameHubApp.qs("type");
+    const code = GameHubApp.qs("game");
+
+    const BANNERS = {
+      "who-knows-me": { img: "pic-going-out-with-friends.webp", title: "🧠 Who Knows Me Better?", sub: "How well do you really know your friend?" },
+      "would-you-rather": { img: "pic-adventure.webp", title: "🤔 Would You Rather?", sub: "Pick a side — then see how everyone else voted." },
+      "truth-or-dare": { img: "pic-volleyball.webp", title: "🔥 Truth or Dare", sub: "Safe, funny and perfect for a group hangout." },
+      "general-knowledge": { img: "pic-ai-tree.webp", title: "🏆 General Knowledge Challenge", sub: "Uganda, ICT, Science and more — beat the clock." },
+    };
+    function banner(t) {
+      const b = BANNERS[t];
+      return `<div class="game-banner"><img src="${b.img}" alt=""><div class="game-banner__text"><h1>${b.title}</h1><p>${b.sub}</p></div></div>`;
+    }
+
+    function renderJoinBox(presetType) {
+      mount.innerHTML = `
+        ${banner(presetType || "who-knows-me")}
+        <div class="card text-center">
+          <div class="icon-chip" style="margin:0 auto 14px;">🎮</div>
+          <h2>Enter a Game Code</h2>
+          <p>Ask your friend for the 6-character code they shared, or paste the link they sent you.</p>
+          <form id="join-form" class="join-box" style="margin-top:16px;">
+            <input type="text" id="join-code-input" maxlength="8" placeholder="e.g. ABC123" aria-label="Game code" autocomplete="off">
+            <button type="submit" class="btn btn-primary">Join Game</button>
+          </form>
+          <div id="join-error"></div>
+        </div>
+      `;
+      document.getElementById("join-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const val = document.getElementById("join-code-input").value.trim();
+        const errEl = document.getElementById("join-error");
+        errEl.innerHTML = "";
+        if (!val) {
+          errEl.innerHTML = `<p style="color:var(--red);margin-top:12px;">Please enter a game code.</p>`;
+          return;
+        }
+        window.location.search = `?type=${presetType || "who-knows-me"}&game=${encodeURIComponent(val.toUpperCase())}`;
+      });
+    }
+
+    async function mountWhoKnowsMe() {
+      if (!code) {
+        renderJoinBox("who-knows-me");
+        return;
+      }
+      mount.innerHTML = `<div class="state-box"><div class="spinner"></div><p>Checking game code…</p></div>`;
+      const { data: game, error } = await GameHubDB.getGameByCode(code);
+      if (error) {
+        mount.innerHTML = `
+          <div class="state-box">
+            <div class="state-box__icon">📡</div>
+            <h3>Network problem</h3>
+            <p>${GameHubApp.escapeHtml(error.message)}</p>
+            <button class="btn btn-secondary" onclick="location.reload()">Try again</button>
+          </div>`;
+        return;
+      }
+      if (!game) {
+        mount.innerHTML = `
+          <div class="state-box">
+            <div class="state-box__icon">❓</div>
+            <h3>Game not found</h3>
+            <p>That code doesn't match any active game. It may have been deleted, or double-check for typos.</p>
+            <div style="margin-top:14px;">${renderRetryJoin()}</div>
+          </div>`;
+        wireRetryJoin("who-knows-me");
+        return;
+      }
+      mount.innerHTML = `
+        <div id="game-intro" style="margin-bottom:20px;"></div>
+        <form id="player-name-form" class="card hidden">
+          <div class="field">
+            <label for="play-name-input">What's your name?</label>
+            <input type="text" id="play-name-input" placeholder="Enter your name" required maxlength="40">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Start Quiz →</button>
+        </form>
+        <div id="quiz-area" class="hidden"></div>
+      `;
+      WhoKnowsMe.initPlay(game);
+    }
+
+    function renderRetryJoin() {
+      return `<form id="join-form" class="join-box"><input type="text" id="join-code-input" maxlength="8" placeholder="Try another code" aria-label="Game code"><button type="submit" class="btn btn-primary">Join</button></form>`;
+    }
+    function wireRetryJoin(presetType) {
+      document.getElementById("join-form")?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const val = document.getElementById("join-code-input").value.trim();
+        if (!val) return;
+        window.location.search = `?type=${presetType}&game=${encodeURIComponent(val.toUpperCase())}`;
+      });
+    }
+
+    function mountWouldYouRather() {
+      mount.innerHTML = `
+        ${banner("would-you-rather")}
+        <div class="wyr-shell" style="padding:0;">
+          <div class="card" id="wyr-root"></div>
+        </div>`;
+      WouldYouRather.init();
+    }
+
+    function mountTruthOrDare() {
+      mount.innerHTML = `
+        ${banner("truth-or-dare")}
+        <div class="tod-shell" style="padding:0;">
+          <div id="tod-root"></div>
+        </div>`;
+      TruthOrDare.init();
+    }
+
+    function mountGeneralKnowledge() {
+      mount.innerHTML = `${banner("general-knowledge")}<div class="card" id="gk-root"></div>`;
+      GeneralKnowledge.init();
+    }
+
+    function mountChooser() {
+      const row = (g, cover, icon, title, sub, href) => `
+        <a href="${href}" class="game-card" data-game="${g}">
+          <div class="game-card__cover"><img src="pic-${cover}.webp" alt=""><div class="game-card__icon">${icon}</div></div>
+          <div class="game-card__body"><h3>${title}</h3><p>${sub}</p></div>
+        </a>`;
+      mount.innerHTML = `
+        <div class="section-head text-center">
+          <h1 style="font-size:clamp(1.6rem,6vw,2.2rem);">Choose a game to play</h1>
+          <p>Or paste a game link/code a friend shared with you.</p>
+        </div>
+        <div class="game-grid" style="grid-template-columns:1fr;">
+          ${row("wkm", "friends", "🧠", "Who Knows Me Better?", "Enter a friend's game code.", "play.html?type=who-knows-me")}
+          ${row("wyr", "adventure", "🤔", "Would You Rather?", "Jump straight in.", "play.html?type=would-you-rather")}
+          ${row("tod", "volleyball", "🔥", "Truth or Dare", "Jump straight in.", "play.html?type=truth-or-dare")}
+          ${row("gk", "ai-tree", "🏆", "General Knowledge", "Jump straight in.", "play.html?type=general-knowledge")}
+        </div>
+      `;
+    }
+
+    switch (type) {
+      case "who-knows-me": mountWhoKnowsMe(); break;
+      case "would-you-rather": mountWouldYouRather(); break;
+      case "truth-or-dare": mountTruthOrDare(); break;
+      case "general-knowledge": mountGeneralKnowledge(); break;
+      default: mountChooser();
+    }
+  })();
+</script>
+</body>
+</html>
