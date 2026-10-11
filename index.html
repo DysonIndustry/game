@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dyson Game Hub — Play. Challenge. Share. Compete.</title>
+<meta name="description" content="Fun games designed to be shared with your friends on WhatsApp. Create quizzes, play Would You Rather, Truth or Dare, and General Knowledge challenges.">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#07080F">
+<meta property="og:title" content="Dyson Game Hub — Play. Challenge. Share. Compete.">
+<meta property="og:description" content="Fun games designed to be shared with your friends on WhatsApp. Create quizzes, play Would You Rather, Truth or Dare, and General Knowledge challenges.">
+<meta property="og:image" content="icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="games.css">
+<link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="gh-nav">
+  <div class="container gh-nav__inner">
+    <a href="index.html" class="gh-brand">
+      <img src="logo.png" alt="" width="38" height="38">
+      Dyson Game Hub
+    </a>
+    <nav class="gh-nav__links" aria-label="Primary">
+      <a href="index.html#games">Games</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="profile.html">Dashboard</a>
+    </nav>
+    <a href="create-game.html" class="btn btn-primary btn-sm gh-nav__cta">+ Create a Game</a>
+    <button class="btn-icon" data-sound-toggle aria-label="Mute sound effects" aria-pressed="false" type="button">🔊</button>
+    <button class="gh-nav__menu-btn" aria-label="Open menu" aria-expanded="false" type="button">☰</button>
+  </div>
+  <div class="gh-mobile-menu">
+    <a href="index.html#games">Games</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="profile.html">Dashboard</a>
+    <a href="create-game.html">+ Create a Game</a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="container hero__grid">
+      <div>
+        <span class="hero__eyebrow"><span class="dot"></span> Built for WhatsApp groups</span>
+        <h1>DYSON<br>GAME<br><span class="accent">HUB</span></h1>
+        <p class="hero__tagline">Play. Challenge. Share. Compete.</p>
+        <p class="hero__sub">Fun games designed to be shared with your friends on WhatsApp — quiz them, challenge them, and see who really knows who.</p>
+        <div class="hero__actions">
+          <a href="#games" class="btn btn-sunset">▶ Play Now</a>
+          <a href="create-game.html" class="btn btn-secondary">✏️ Create a Game</a>
+        </div>
+
+        <div class="stats" id="stats-region">
+          <div class="stat-card"><div class="stat-card__num">—</div><div class="stat-card__label">Games Played</div></div>
+          <div class="stat-card"><div class="stat-card__num">—</div><div class="stat-card__label">Players</div></div>
+          <div class="stat-card"><div class="stat-card__num">—</div><div class="stat-card__label">Questions Answered</div></div>
+        </div>
+      </div>
+
+      <div class="hero__visual" aria-hidden="true">
+        <div class="collage">
+          <div class="collage__col">
+            <div class="collage__tile is-wide"><img src="pic-gaming.webp" alt="" loading="lazy" decoding="async"></div>
+            <div class="collage__tile"><img src="pic-burna-boy.webp" alt="" loading="lazy" decoding="async"></div>
+          </div>
+          <div class="collage__col">
+            <div class="collage__tile"><img src="pic-evening.webp" alt="" loading="lazy" decoding="async"></div>
+            <div class="collage__tile"><img src="pic-chelsea.webp" alt="" loading="lazy" decoding="async"></div>
+          </div>
+          <div class="collage__col">
+            <div class="collage__tile"><img src="pic-dubai.webp" alt="" loading="lazy" decoding="async"></div>
+            <div class="collage__tile is-wide"><img src="pic-rnb.webp" alt="" loading="lazy" decoding="async"></div>
+          </div>
+          <div class="bubble bubble--in">Dyson challenged you to <strong>Who Knows Me Better?</strong> 🧠</div>
+          <div class="bubble bubble--out bubble--q">What's my favourite food? 🌯</div>
+          <div class="bubble bubble--score">🎉 You scored 13/15 — 87%!</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PICTURE STRIP ================= -->
+  <section aria-label="A taste of the questions" style="padding:8px 0 20px;">
+    <div class="marquee" aria-hidden="true"><div class="marquee__track"><div class="chip-pic"><img src="pic-burna-boy.webp" alt="Burna Boy" loading="lazy" decoding="async"><span>Burna Boy</span></div><div class="chip-pic"><img src="pic-pizza.webp" alt="Pizza" loading="lazy" decoding="async"><span>Pizza</span></div><div class="chip-pic"><img src="pic-chelsea.webp" alt="Chelsea" loading="lazy" decoding="async"><span>Chelsea</span></div><div class="chip-pic"><img src="pic-dubai.webp" alt="Dubai" loading="lazy" decoding="async"><span>Dubai</span></div><div class="chip-pic"><img src="pic-gaming.webp" alt="Gaming" loading="lazy" decoding="async"><span>Gaming</span></div><div class="chip-pic"><img src="pic-afrobeats.webp" alt="Afrobeats" loading="lazy" decoding="async"><span>Afrobeats</span></div><div class="chip-pic"><img src="pic-football.webp" alt="Football" loading="lazy" decoding="async"><span>Football</span></div><div class="chip-pic"><img src="pic-evening.webp" alt="Evening" loading="lazy" decoding="async"><span>Evening</span></div><div class="chip-pic"><img src="pic-travelling.webp" alt="Travelling" loading="lazy" decoding="async"><span>Travelling</span></div><div class="chip-pic"><img src="pic-photography.webp" alt="Photography" loading="lazy" decoding="async"><span>Photography</span></div><div class="chip-pic"><img src="pic-racing.webp" alt="Racing" loading="lazy" decoding="async"><span>Racing</span></div><div class="chip-pic"><img src="pic-juice.webp" alt="Juice" loading="lazy" decoding="async"><span>Juice</span></div><div class="chip-pic"><img src="pic-burna-boy.webp" alt="Burna Boy" loading="lazy" decoding="async"><span>Burna Boy</span></div><div class="chip-pic"><img src="pic-pizza.webp" alt="Pizza" loading="lazy" decoding="async"><span>Pizza</span></div><div class="chip-pic"><img src="pic-chelsea.webp" alt="Chelsea" loading="lazy" decoding="async"><span>Chelsea</span></div><div class="chip-pic"><img src="pic-dubai.webp" alt="Dubai" loading="lazy" decoding="async"><span>Dubai</span></div><div class="chip-pic"><img src="pic-gaming.webp" alt="Gaming" loading="lazy" decoding="async"><span>Gaming</span></div><div class="chip-pic"><img src="pic-afrobeats.webp" alt="Afrobeats" loading="lazy" decoding="async"><span>Afrobeats</span></div><div class="chip-pic"><img src="pic-football.webp" alt="Football" loading="lazy" decoding="async"><span>Football</span></div><div class="chip-pic"><img src="pic-evening.webp" alt="Evening" loading="lazy" decoding="async"><span>Evening</span></div><div class="chip-pic"><img src="pic-travelling.webp" alt="Travelling" loading="lazy" decoding="async"><span>Travelling</span></div><div class="chip-pic"><img src="pic-photography.webp" alt="Photography" loading="lazy" decoding="async"><span>Photography</span></div><div class="chip-pic"><img src="pic-racing.webp" alt="Racing" loading="lazy" decoding="async"><span>Racing</span></div><div class="chip-pic"><img src="pic-juice.webp" alt="Juice" loading="lazy" decoding="async"><span>Juice</span></div></div></div>
+    <div class="marquee marquee--rev" aria-hidden="true"><div class="marquee__track"><div class="chip-pic"><img src="pic-drake.webp" alt="Drake" loading="lazy" decoding="async"><span>Drake</span></div><div class="chip-pic"><img src="pic-rice.webp" alt="Rice" loading="lazy" decoding="async"><span>Rice</span></div><div class="chip-pic"><img src="pic-arsenal.webp" alt="Arsenal" loading="lazy" decoding="async"><span>Arsenal</span></div><div class="chip-pic"><img src="pic-night.webp" alt="Night" loading="lazy" decoding="async"><span>Night</span></div><div class="chip-pic"><img src="pic-coding.webp" alt="Coding" loading="lazy" decoding="async"><span>Coding</span></div><div class="chip-pic"><img src="pic-chris-brown.webp" alt="Chris Brown" loading="lazy" decoding="async"><span>Chris Brown</span></div><div class="chip-pic"><img src="pic-basketball.webp" alt="Basketball" loading="lazy" decoding="async"><span>Basketball</span></div><div class="chip-pic"><img src="pic-usa.webp" alt="USA" loading="lazy" decoding="async"><span>USA</span></div><div class="chip-pic"><img src="pic-south-africa.webp" alt="South Africa" loading="lazy" decoding="async"><span>South Africa</span></div><div class="chip-pic"><img src="pic-instagram.webp" alt="Instagram" loading="lazy" decoding="async"><span>Instagram</span></div><div class="chip-pic"><img src="pic-adventure.webp" alt="Adventure" loading="lazy" decoding="async"><span>Adventure</span></div><div class="chip-pic"><img src="pic-money.webp" alt="Money" loading="lazy" decoding="async"><span>Money</span></div><div class="chip-pic"><img src="pic-drake.webp" alt="Drake" loading="lazy" decoding="async"><span>Drake</span></div><div class="chip-pic"><img src="pic-rice.webp" alt="Rice" loading="lazy" decoding="async"><span>Rice</span></div><div class="chip-pic"><img src="pic-arsenal.webp" alt="Arsenal" loading="lazy" decoding="async"><span>Arsenal</span></div><div class="chip-pic"><img src="pic-night.webp" alt="Night" loading="lazy" decoding="async"><span>Night</span></div><div class="chip-pic"><img src="pic-coding.webp" alt="Coding" loading="lazy" decoding="async"><span>Coding</span></div><div class="chip-pic"><img src="pic-chris-brown.webp" alt="Chris Brown" loading="lazy" decoding="async"><span>Chris Brown</span></div><div class="chip-pic"><img src="pic-basketball.webp" alt="Basketball" loading="lazy" decoding="async"><span>Basketball</span></div><div class="chip-pic"><img src="pic-usa.webp" alt="USA" loading="lazy" decoding="async"><span>USA</span></div><div class="chip-pic"><img src="pic-south-africa.webp" alt="South Africa" loading="lazy" decoding="async"><span>South Africa</span></div><div class="chip-pic"><img src="pic-instagram.webp" alt="Instagram" loading="lazy" decoding="async"><span>Instagram</span></div><div class="chip-pic"><img src="pic-adventure.webp" alt="Adventure" loading="lazy" decoding="async"><span>Adventure</span></div><div class="chip-pic"><img src="pic-money.webp" alt="Money" loading="lazy" decoding="async"><span>Money</span></div></div></div>
+  </section>
+
+  <!-- ================= POPULAR GAMES ================= -->
+  <section class="section" id="games">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Pick your game</span>
+        <h2>Popular Games</h2>
+        <p>Four ways to challenge your friends — pick one and share the link on WhatsApp.</p>
+      </div>
+
+      <div class="game-grid">
+        <article class="game-card" data-game="wkm">
+          <div class="game-card__cover"><img src="pic-friends.webp" alt="Who Knows Me Better?" loading="lazy" decoding="async"><div class="game-card__icon" aria-hidden="true">🧠</div></div>
+          <div class="game-card__body">
+            <h3>Who Knows Me Better?</h3>
+            <p>Create a custom picture quiz about yourself and see who really knows you best.</p>
+            <div class="game-card__meta"><span class="pill">👥 2+ players</span><span class="pill">10–30 Qs</span></div>
+            <div class="game-card__foot"><a href="play.html?type=who-knows-me" class="btn btn-play btn-sm btn-block">▶ Play</a></div>
+          </div>
+        </article>
+        
+        <article class="game-card" data-game="wyr">
+          <div class="game-card__cover"><img src="pic-adventure.webp" alt="Would You Rather?" loading="lazy" decoding="async"><div class="game-card__icon" aria-hidden="true">🤔</div></div>
+          <div class="game-card__body">
+            <h3>Would You Rather?</h3>
+            <p>Pick a side on 36 fun dilemmas and see how your friends voted.</p>
+            <div class="game-card__meta"><span class="pill">👥 Solo or group</span><span class="pill">36 Qs</span></div>
+            <div class="game-card__foot"><a href="play.html?type=would-you-rather" class="btn btn-play btn-sm btn-block">▶ Play</a></div>
+          </div>
+        </article>
+        
+        <article class="game-card" data-game="tod">
+          <div class="game-card__cover"><img src="pic-volleyball.webp" alt="Truth or Dare" loading="lazy" decoding="async"><div class="game-card__icon" aria-hidden="true">🔥</div></div>
+          <div class="game-card__body">
+            <h3>Truth or Dare</h3>
+            <p>Safe, funny truths and dares — perfect for a group hangout.</p>
+            <div class="game-card__meta"><span class="pill">👥 Group</span><span class="pill">60 prompts</span></div>
+            <div class="game-card__foot"><a href="play.html?type=truth-or-dare" class="btn btn-play btn-sm btn-block">▶ Play</a></div>
+          </div>
+        </article>
+        
+        <article class="game-card" data-game="gk">
+          <div class="game-card__cover"><img src="pic-ai-tree.webp" alt="General Knowledge Challenge" loading="lazy" decoding="async"><div class="game-card__icon" aria-hidden="true">🏆</div></div>
+          <div class="game-card__body">
+            <h3>General Knowledge Challenge</h3>
+            <p>Compete across 7 categories including Uganda, ICT and Science.</p>
+            <div class="game-card__meta"><span class="pill">👥 Competitive</span><span class="pill">35 Qs</span></div>
+            <div class="game-card__foot"><a href="play.html?type=general-knowledge" class="btn btn-play btn-sm btn-block">▶ Play</a></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= INSIDE THE QUIZ ================= -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Picture-powered quizzes</span>
+        <h2>Every answer comes with a picture</h2>
+        <p>The "Who Knows Me Better?" bank has 25 ready-made questions and every option is illustrated — so your friends tap a photo, not just a word.</p>
+      </div>
+      <div class="bento"><article class="bento__card" data-c="orange"><div class="bento__head"><h3>🍕 Food &amp; Drink</h3><span>3 questions</span></div><div class="bento__pics"><div class="bento__pic"><img src="pic-pizza.webp" alt="Pizza" loading="lazy" decoding="async"><em>Pizza</em></div><div class="bento__pic"><img src="pic-rice.webp" alt="Rice" loading="lazy" decoding="async"><em>Rice</em></div><div class="bento__pic"><img src="pic-juice.webp" alt="Juice" loading="lazy" decoding="async"><em>Juice</em></div><div class="bento__pic"><img src="pic-energy-drink.webp" alt="Energy drink" loading="lazy" decoding="async"><em>Energy drink</em></div></div></article><article class="bento__card" data-c="magenta"><div class="bento__head"><h3>🎧 Music &amp; Artists</h3><span>4 questions</span></div><div class="bento__pics"><div class="bento__pic"><img src="pic-burna-boy.webp" alt="Burna Boy" loading="lazy" decoding="async"><em>Burna Boy</em></div><div class="bento__pic"><img src="pic-drake.webp" alt="Drake" loading="lazy" decoding="async"><em>Drake</em></div><div class="bento__pic"><img src="pic-ayra-starr.webp" alt="Ayra Starr" loading="lazy" decoding="async"><em>Ayra Starr</em></div><div class="bento__pic"><img src="pic-afrobeats.webp" alt="Afrobeats" loading="lazy" decoding="async"><em>Afrobeats</em></div></div></article><article class="bento__card" data-c="blue"><div class="bento__head"><h3>⚽ Sports &amp; Teams</h3><span>3 questions</span></div><div class="bento__pics"><div class="bento__pic"><img src="pic-football.webp" alt="Football" loading="lazy" decoding="async"><em>Football</em></div><div class="bento__pic"><img src="pic-basketball.webp" alt="Basketball" loading="lazy" decoding="async"><em>Basketball</em></div><div class="bento__pic"><img src="pic-chelsea.webp" alt="Chelsea" loading="lazy" decoding="async"><em>Chelsea</em></div><div class="bento__pic"><img src="pic-arsenal.webp" alt="Arsenal" loading="lazy" decoding="async"><em>Arsenal</em></div></div></article><article class="bento__card" data-c="amber"><div class="bento__head"><h3>✈️ Dream Places</h3><span>2 questions</span></div><div class="bento__pics"><div class="bento__pic"><img src="pic-dubai.webp" alt="Dubai" loading="lazy" decoding="async"><em>Dubai</em></div><div class="bento__pic"><img src="pic-usa.webp" alt="USA" loading="lazy" decoding="async"><em>USA</em></div><div class="bento__pic"><img src="pic-uk.webp" alt="UK" loading="lazy" decoding="async"><em>UK</em></div><div class="bento__pic"><img src="pic-south-africa.webp" alt="South Africa" loading="lazy" decoding="async"><em>South Africa</em></div></div></article><article class="bento__card" data-c="sky"><div class="bento__head"><h3>🎮 Games &amp; Tech</h3><span>5 questions</span></div><div class="bento__pics"><div class="bento__pic"><img src="pic-gaming.webp" alt="Gaming" loading="lazy" decoding="async"><em>Gaming</em></div><div class="bento__pic"><img src="pic-racing.webp" alt="Racing" loading="lazy" decoding="async"><em>Racing</em></div><div class="bento__pic"><img src="pic-coding.webp" alt="Coding" loading="lazy" decoding="async"><em>Coding</em></div><div class="bento__pic"><img src="pic-strategy.webp" alt="Strategy" loading="lazy" decoding="async"><em>Strategy</em></div></div></article><article class="bento__card" data-c="red"><div class="bento__head"><h3>🌅 Moods &amp; Time</h3><span>4 questions</span></div><div class="bento__pics"><div class="bento__pic"><img src="pic-morning.webp" alt="Morning" loading="lazy" decoding="async"><em>Morning</em></div><div class="bento__pic"><img src="pic-afternoon.webp" alt="Afternoon" loading="lazy" decoding="async"><em>Afternoon</em></div><div class="bento__pic"><img src="pic-evening.webp" alt="Evening" loading="lazy" decoding="async"><em>Evening</em></div><div class="bento__pic"><img src="pic-night.webp" alt="Night" loading="lazy" decoding="async"><em>Night</em></div></div></article></div>
+      <p class="text-center" style="margin-top:26px;"><a href="create-game.html" class="btn btn-primary">Build my quiz →</a></p>
+    </div>
+  </section>
+
+  <!-- ================= HOW IT WORKS ================= -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head text-center">
+        <span class="kicker">Simple as 1-2-3</span>
+        <h2>How it works</h2>
+        <p>Three steps from idea to a challenge in your friend's WhatsApp inbox.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="icon-chip">✏️</div><h3>Create</h3><p>Build a quiz about yourself or jump straight into a ready-made game.</p></div>
+        <div class="step"><div class="icon-chip c-violet">🔗</div><h3>Share</h3><p>Get a unique game code and link, then send it on WhatsApp.</p></div>
+        <div class="step"><div class="icon-chip c-gold">🏁</div><h3>Compete</h3><p>Friends play, scores are saved automatically, and the leaderboard updates live.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="container" style="padding-bottom:10px;">
+    <div class="cta-band">
+      <div class="cta-band__bg" aria-hidden="true"><img src="pic-going-out-with-friends.webp" alt="" loading="lazy" decoding="async"></div>
+      <h2>Who really knows you?</h2>
+      <p>Make your quiz in two minutes, drop the link in your group chat and watch the scores roll in.</p>
+      <div class="hero__actions" style="justify-content:center;margin-top:0;">
+        <a href="create-game.html" class="btn btn-sunset">✏️ Create a Game</a>
+        <a href="leaderboard.html" class="btn btn-secondary">🏆 See the Leaderboard</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="gh-footer">
+  <div class="container">
+    <div class="gh-footer__top">
+      <div class="gh-footer__brand"><img src="logo.png" alt=""> Dyson Game Hub</div>
+      <div class="gh-footer__cols">
+        <div class="gh-footer__col">
+          <h4>Games</h4>
+          <a href="play.html?type=who-knows-me">Who Knows Me Better?</a>
+          <a href="play.html?type=would-you-rather">Would You Rather?</a>
+          <a href="play.html?type=truth-or-dare">Truth or Dare</a>
+          <a href="play.html?type=general-knowledge">General Knowledge</a>
+        </div>
+        <div class="gh-footer__col">
+          <h4>Dyson Game Hub</h4>
+          <a href="create-game.html">Create a Game</a>
+          <a href="leaderboard.html">Leaderboard</a>
+          <a href="profile.html">Dashboard</a>
+        </div>
+      </div>
+    </div>
+    <div class="gh-footer__bottom">© <span data-year></span> Dyson Game Hub. Not affiliated with WhatsApp Inc. or Meta.</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="config.js"></script>
+<script src="supabase.js"></script>
+<script src="images.js"></script>
+<script src="app.js"></script>
+<script src="auth.js"></script>
+<script src="sharing.js"></script>
+<script src="sound.js"></script>
+</body>
+</html>

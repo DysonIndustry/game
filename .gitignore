@@ -1,0 +1,13 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+
+# Local env/testing artifacts (GameHub has no build step, but just in case)
+node_modules/
+.env
+.env.local

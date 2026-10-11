@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaderboard — Dyson Game Hub</title>
+<meta name="description" content="See the best scores across Dyson Game Hub.">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#07080F">
+<meta property="og:title" content="Leaderboard — Dyson Game Hub">
+<meta property="og:description" content="See the best scores across Dyson Game Hub.">
+<meta property="og:image" content="icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="games.css">
+<link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="gh-nav">
+  <div class="container gh-nav__inner">
+    <a href="index.html" class="gh-brand">
+      <img src="logo.png" alt="" width="38" height="38">
+      Dyson Game Hub
+    </a>
+    <nav class="gh-nav__links" aria-label="Primary">
+      <a href="index.html#games">Games</a>
+      <a href="leaderboard.html" aria-current="page">Leaderboard</a>
+      <a href="profile.html">Dashboard</a>
+    </nav>
+    <a href="create-game.html" class="btn btn-primary btn-sm gh-nav__cta">+ Create a Game</a>
+    <button class="btn-icon" data-sound-toggle aria-label="Mute sound effects" aria-pressed="false" type="button">🔊</button>
+    <button class="gh-nav__menu-btn" aria-label="Open menu" aria-expanded="false" type="button">☰</button>
+  </div>
+  <div class="gh-mobile-menu">
+    <a href="index.html#games">Games</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="profile.html">Dashboard</a>
+    <a href="create-game.html">+ Create a Game</a>
+  </div>
+</header>
+<main id="main">
+  <section class="section" style="padding-top:32px;">
+    <div class="container" style="max-width:680px;">
+      <div class="section-head">
+        <h1 style="font-size:1.8rem;">Leaderboard</h1>
+        <p>See the best scores across Dyson Game Hub, or look up one game's leaderboard by its code.</p>
+      </div>
+
+      <div class="chip-row">
+        <button class="chip is-active" data-tab="global">🌍 Global Leaderboard</button>
+        <button class="chip" data-tab="game">🔎 Find a Game</button>
+      </div>
+
+      <div id="tab-global">
+        <div id="global-lb"></div>
+      </div>
+
+      <div id="tab-game" class="hidden">
+        <div class="card" style="margin-bottom:20px;">
+          <form id="game-lookup-form" class="join-box">
+            <input type="text" id="lookup-code" placeholder="Enter game code e.g. ABC123" maxlength="8">
+            <button type="submit" class="btn btn-primary">View</button>
+          </form>
+        </div>
+        <div id="game-lb-result"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="gh-footer">
+  <div class="container">
+    <div class="gh-footer__bottom text-center" style="border-top:none;padding-top:0;">© <span data-year></span> Dyson Game Hub. Not affiliated with WhatsApp Inc. or Meta.</div>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="config.js"></script>
+<script src="supabase.js"></script>
+<script src="images.js"></script>
+<script src="app.js"></script>
+<script src="auth.js"></script>
+<script src="sharing.js"></script>
+<script src="sound.js"></script>
+<script src="leaderboard.js"></script>
+<script>
+  (function () {
+    const chips = document.querySelectorAll(".chip[data-tab]");
+    const panels = { global: document.getElementById("tab-global"), game: document.getElementById("tab-game") };
+
+    chips.forEach((chip) =>
+      chip.addEventListener("click", () => {
+        chips.forEach((c) => c.classList.remove("is-active"));
+        chip.classList.add("is-active");
+        Object.entries(panels).forEach(([key, el]) => el.classList.toggle("hidden", key !== chip.dataset.tab));
+      })
+    );
+
+    GameHubLeaderboard.loadGlobal(document.getElementById("global-lb"));
+
+    document.getElementById("game-lookup-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const code = document.getElementById("lookup-code").value.trim();
+      const resultEl = document.getElementById("game-lb-result");
+      if (!code) {
+        resultEl.innerHTML = `<p style="color:var(--red);">Please enter a game code.</p>`;
+        return;
+      }
+      resultEl.innerHTML = `<div class="state-box"><div class="spinner"></div><p>Looking up game…</p></div>`;
+      const { data: game, error } = await GameHubDB.getGameByCode(code);
+      if (error) {
+        resultEl.innerHTML = `<div class="state-box"><div class="state-box__icon">📡</div><h3>Network problem</h3><p>${GameHubApp.escapeHtml(error.message)}</p></div>`;
+        return;
+      }
+      if (!game) {
+        resultEl.innerHTML = `<div class="state-box"><div class="state-box__icon">❓</div><h3>Game not found</h3><p>Double-check the code and try again.</p></div>`;
+        return;
+      }
+      resultEl.innerHTML = `<h3>${GameHubApp.escapeHtml(game.title)}</h3><div id="found-game-lb"></div>`;
+      GameHubLeaderboard.loadForGame(game.id, document.getElementById("found-game-lb"));
+    });
+  })();
+</script>
+</body>
+</html>

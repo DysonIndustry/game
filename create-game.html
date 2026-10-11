@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create a Game — Dyson Game Hub</title>
+<meta name="description" content="Create your own Who Knows Me Better? picture quiz and share it on WhatsApp.">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#07080F">
+<meta property="og:title" content="Create a Game — Dyson Game Hub">
+<meta property="og:description" content="Create your own Who Knows Me Better? picture quiz and share it on WhatsApp.">
+<meta property="og:image" content="icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="games.css">
+<link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="gh-nav">
+  <div class="container gh-nav__inner">
+    <a href="index.html" class="gh-brand">
+      <img src="logo.png" alt="" width="38" height="38">
+      Dyson Game Hub
+    </a>
+    <nav class="gh-nav__links" aria-label="Primary">
+      <a href="index.html#games">Games</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="profile.html">Dashboard</a>
+    </nav>
+    <a href="profile.html" class="btn btn-secondary btn-sm gh-nav__cta">My Dashboard</a>
+    <button class="btn-icon" data-sound-toggle aria-label="Mute sound effects" aria-pressed="false" type="button">🔊</button>
+    <button class="gh-nav__menu-btn" aria-label="Open menu" aria-expanded="false" type="button">☰</button>
+  </div>
+  <div class="gh-mobile-menu">
+    <a href="index.html#games">Games</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="profile.html">Dashboard</a>
+    <a href="create-game.html">+ Create a Game</a>
+  </div>
+</header>
+<main id="main">
+  <section class="section" style="padding-top:32px;">
+    <div class="container" style="max-width:720px;">
+
+      <div id="wkm-form-panel">
+        <div class="section-head">
+          <span class="badge">🧠 Who Knows Me Better?</span>
+          <h1 style="font-size:1.8rem;margin-top:10px;">Create your quiz</h1>
+          <p>Pick from 25 ready-made questions below — no typing required — then choose the correct answer for each one. You can also add your own questions with optional images.</p>
+        </div>
+
+        <div class="card" style="margin-bottom:20px;">
+          <div class="field-row" style="grid-template-columns:1fr 1fr;">
+            <div class="field">
+              <label for="wkm-creator-name">Your name</label>
+              <input type="text" id="wkm-creator-name" placeholder="e.g. Dyson" maxlength="40">
+            </div>
+            <div class="field">
+              <label for="wkm-game-title">Game title</label>
+              <input type="text" id="wkm-game-title" placeholder="e.g. How well do you know Dyson?" maxlength="60">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center" style="justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+          <h2 style="font-size:1.2rem;margin:0;">Choose Your Questions</h2>
+          <span id="wkm-selected-count" class="badge">0 / 30 questions selected</span>
+        </div>
+
+        <div class="flex gap-12" style="flex-wrap:wrap;margin-bottom:16px;">
+          <input type="text" id="wkm-bank-search" placeholder="🔍 Search questions…" style="flex:1;min-width:180px;">
+          <button type="button" id="wkm-select-all-btn" class="btn btn-secondary btn-sm">Select All (25)</button>
+          <button type="button" id="wkm-clear-all-btn" class="btn btn-ghost btn-sm">Clear All</button>
+        </div>
+
+        <div id="wkm-bank-list" style="margin-bottom:26px;"></div>
+
+        <div class="card" style="margin-bottom:20px;">
+          <h3 style="margin-bottom:14px;">Or add your own custom question</h3>
+          <form id="wkm-custom-form">
+            <div class="field">
+              <label for="qtext">Question</label>
+              <input type="text" id="qtext" name="qtext" placeholder="e.g. What's my favourite food?" required maxlength="140">
+            </div>
+            <div class="field-row" style="grid-template-columns:1fr 1fr;">
+              <div class="field"><label for="opt_a">Option A</label><input type="text" id="opt_a" name="opt_a" required maxlength="60"></div>
+              <div class="field"><label for="opt_b">Option B</label><input type="text" id="opt_b" name="opt_b" required maxlength="60"></div>
+              <div class="field"><label for="opt_c">Option C</label><input type="text" id="opt_c" name="opt_c" required maxlength="60"></div>
+              <div class="field"><label for="opt_d">Option D</label><input type="text" id="opt_d" name="opt_d" required maxlength="60"></div>
+            </div>
+            <div class="field">
+              <label for="correct">Correct answer</label>
+              <select id="correct" name="correct" required>
+                <option value="0">Option A</option>
+                <option value="1">Option B</option>
+                <option value="2">Option C</option>
+                <option value="3">Option D</option>
+              </select>
+            </div>
+            <details style="margin-bottom:16px;">
+              <summary style="cursor:pointer;font-weight:700;font-size:.9rem;color:var(--sky);">🖼 Add images to options (optional)</summary>
+              <div class="field-row" style="grid-template-columns:1fr 1fr;margin-top:12px;">
+                <div class="field"><label for="img_a">Image URL — Option A</label><input type="text" id="img_a" name="img_a" placeholder="https://…"></div>
+                <div class="field"><label for="img_b">Image URL — Option B</label><input type="text" id="img_b" name="img_b" placeholder="https://…"></div>
+                <div class="field"><label for="img_c">Image URL — Option C</label><input type="text" id="img_c" name="img_c" placeholder="https://…"></div>
+                <div class="field"><label for="img_d">Image URL — Option D</label><input type="text" id="img_d" name="img_d" placeholder="https://…"></div>
+              </div>
+            </details>
+            <button type="submit" class="btn btn-secondary btn-block">+ Add Custom Question</button>
+          </form>
+        </div>
+        <div id="wkm-custom-list" style="margin-bottom:24px;"></div>
+
+        <div class="flex gap-12" style="flex-wrap:wrap;">
+          <button type="button" id="wkm-preview-btn" class="btn btn-secondary btn-block">👀 Preview Quiz</button>
+          <button type="button" id="wkm-create-btn" class="btn btn-primary btn-block" disabled>🚀 Create Game</button>
+        </div>
+
+        <div id="wkm-preview" class="hidden" style="margin-top:30px;"></div>
+      </div>
+
+      <div id="wkm-result-panel" class="hidden card"></div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="gh-footer">
+  <div class="container">
+    <div class="gh-footer__bottom text-center" style="border-top:none;padding-top:0;">© <span data-year></span> Dyson Game Hub. Not affiliated with WhatsApp Inc. or Meta.</div>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="config.js"></script>
+<script src="supabase.js"></script>
+<script src="images.js"></script>
+<script src="app.js"></script>
+<script src="auth.js"></script>
+<script src="sharing.js"></script>
+<script src="sound.js"></script>
+<script src="who-knows-me.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => WhoKnowsMe.initCreateForm());
+</script>
+</body>
+</html>
